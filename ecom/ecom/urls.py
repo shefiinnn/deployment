@@ -36,3 +36,5 @@ urlpatterns = [
     path('orderview/',app1.views.orderview,name='orderview'),
     path('delete_order/<int:order_child_id>/',app1.views.delete_order,name='delete_order')
 ]+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
