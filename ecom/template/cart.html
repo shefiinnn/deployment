@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        /* General Styles (same as your other pages) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar ul li {
+            display: inline;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            background-color: #575757;
+            border-radius: 5px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .total {
+            font-size: 1.5em;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #C0392B;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .continue-shopping {
+            background-color: #28A745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        .continue-shopping:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">SHOEZO</div>
+        <ul>
+            <li><a href="{% url 'userhm' %}">Products</a></li>
+            <li><a href="{% url 'listcart' %}">Cart</a></li>
+            <li><a href="{% url 'orderview' %}">Cart</a></li>
+            <li><a href="{% url 'login' %}">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="container">
+        <h1>Your Cart</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.date|date:"M d, Y" }}</td>
+                    <td>{{ item.pid.prname }}</td>
+                    <td>
+                        <img src="{{ item.pid.image.url }}" alt="{{ item.pid.prname }}" 
+                             style="width: 50px; height: auto; border-radius: 5px;">
+                    </td>
+                    <td>{{ item.qty }}</td>
+                    <td>${{ item.pid.price }}</td>
+                    <td>${{ item.total }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'remove_from_cart' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <div class="total">
+            <strong>Total: ${{ total_price }}</strong>
+        </div>
+    
+        <!-- Place Order Button -->
+        <form method="POST" action="{% url 'listcart' %}">
+            {% csrf_token %}
+            <button type="submit" class="place-order-button">Place Order</button>
+        </form>
+    
+        <div class="action-buttons">
+            <a href="{% url 'userhm' %}" class="continue-shopping">Continue Shopping</a>
+        </div>
+    </div>
+    
+
+        
+        

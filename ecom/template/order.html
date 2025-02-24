@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .navbar ul li {
+            display: inline;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f4f4f4;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .action-buttons a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0 0.5rem;
+        }
+
+        .action-buttons a:hover {
+            background-color: #0056b3;
+        }
+        .cancel-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+    }
+
+        .cancel-btn:hover {
+        background-color: darkred;
+    }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">SHOEZO</div>
+    <ul>
+        <li><a href="{% url 'userhm' %}">Products</a></li>
+        <li><a href="{% url 'listcart' %}">Cart</a></li>
+        <li><a href="{% url 'orderview' %}">Order</a></li>
+        <li><a href="{% url 'login' %}">Logout</a></li>
+    </ul>
+</div>
+
+<div class="container">
+    <h1>Your Orders</h1>
+    
+    {% if orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                {% for orderchild in order.order_children %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ orderchild.pid.prname }}</td> <!-- Accessing product name -->
+                        <td>{{ orderchild.qty }}</td> <!-- Accessing quantity -->
+                        <td>${{ orderchild.pid.price }}</td> <!-- Accessing product price -->
+                        <td>${{ orderchild.total }}</td> <!-- Accessing total price for the orderchild -->
+                        <td>{{ order.date|date:"M d, Y" }}</td> <!-- Order date -->
+                        <td>                           
+                            <form action="{% url 'delete_order' orderchild.id %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="cancel-btn">Cancel</button>
+                            </form>                            
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No orders found. Start shopping now!</p>
+    {% endif %}
+
+    <div class="action-buttons">
+        <a href="{% url 'userhm' %}">Continue Shopping</a>
+    </div>
+</div>

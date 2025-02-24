@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.prname }} - Product Details</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .product-detail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .image-section {
+            flex: 1 1 40%;
+            text-align: center;
+            position: relative;
+            right: 45px;
+        }
+
+        .image-section img {
+            max-width: 80%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .info-section {
+            flex: 1 1 50%;
+        }
+
+        .price {
+            font-size: 1.5em;
+            color: #E74C3C;
+            margin: 10px 0;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        input[type="number"]{
+            width: 50%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+
+        }
+
+        button {
+            background-color: #28A745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-detail {
+                flex-direction: column;
+            }
+
+            .image-section, .info-section {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ product.prname }}</h1>
+        <div class="product-detail">
+            <div class="image-section">
+                <img src="{{ product.image.url }}" alt="{{ product.prname }}">
+            </div>
+            <div class="info-section">
+                <h2>{{ product.prname }}</h2>
+                <p class="price">Price: $<span id="price">{{ product.price }}</span></p>
+                <p>{{ product.description }}</p>
+                
+                <form method="POST" action="{% url 'carts' id=product.id %}">
+                    {% csrf_token %}
+                    <div class="size-selection">
+                        <label for="size">Select Size:</label>
+                        <select name="size" id="size" required>
+                            <option value="" disabled selected>Select size</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                        </select>
+                    </div>
+                
+                    <div class="quantity-selection">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" name="quantity" id="quantity" value="1" min="1" max="10" required oninput="updatePrice()">
+                    </div>
+                
+                    <p class="total-price">Total: $<span id="total-price">{{ product.price }}</span></p>
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+        <a href="{% url 'userhm' %}" class="back-link">Back to Products</a>
+    </div>
+
+    <script>
+        const pricePerUnit = parseFloat(document.getElementById('price').textContent);
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceElement = document.getElementById('total-price');
+
+        function updatePrice() {
+            const quantity = parseInt(quantityInput.value) || 1;
+            const totalPrice = (pricePerUnit * quantity).toFixed(2); 
+            totalPriceElement.textContent = totalPrice; 
+        }
+    </script>
+</body>
+</html>

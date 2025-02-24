@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            padding: 10px 15px;
+            background-color: #0056b3;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #003d80;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 60px);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .action-links {
+            margin-top: 20px;
+        }
+
+        .action-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .action-links a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Shoezo Admin Dashboard</h1>
+        <div>
+            <a href="{% url 'productadd' %}">Add Product</a>
+            <a href="{%url 'login'%}">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Welcome to the Shoezo Admin Panel</h2>
+        <p>Add New Products</p>
+        <div class="action-links">
+            <a href="{% url 'productadd' %}">Add a New Product</a>
+            <a href="{%url 'login'%}">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
